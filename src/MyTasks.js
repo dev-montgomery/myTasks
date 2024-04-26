@@ -1,21 +1,26 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.css';
 
 const MyTasks = () => {
-
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
 
   function handleInput(e) {
-    e.preventDefault();
     setNewTask(e.target.value);
   };
 
   function addTask() {
     if (newTask.trim() !== '') {
-      setTasks(prev => [...prev, newTask]);
+      setTasks(prev => [...prev, { text: newTask, isComplete: false, isEditing: false }]);
       setNewTask('');
     };
+  };
+
+  function toggleComplete(index) {
+    const updated = tasks.map((task, position) =>
+      position === index ? { ...task, isComplete: !task.isComplete } : task
+    );
+    setTasks(updated);
   };
 
   function deleteTask(index) {
@@ -42,30 +47,35 @@ const MyTasks = () => {
   return (
     <div id="task-list">
       <h1>My Tasks</h1>
-
-      {/* <form id="tasks" action="submit"> */}
-        <input
-          type="text"
-          name="task"
-          placeholder="add new task"
-          value={newTask}
-          onChange={handleInput}
-        />
-        <button id="add-btn" form="tasks" type="submit" onClick={addTask}><i class="fa-solid fa-plus"></i> add new task</button>
-      {/* </form> */}
-      
+      <input
+        type="text"
+        name="task"
+        placeholder="add a task"
+        value={newTask}
+        onChange={handleInput}
+      />
+      <button id="add-btn" onClick={addTask}>
+        <i className="fas fa-plus"></i> add new task
+      </button>
       <ul>
-        {tasks.map((task, index) => 
+        {tasks.map((task, index) => (
           <li key={index}>
-            <span className="text">{task}</span>
-            <button className="delete-btn" onClick={() => deleteTask(index)}><i class="fa-solid fa-trash"></i></button>
-            <button className="up-btn" onClick={() => moveUp(index)}><i class="fa-solid fa-caret-up"></i></button>
-            <button className="down-btn" onClick={() => moveDown(index)}><i class="fa-solid fa-caret-down"></i></button>
+            <p className="text" onClick={() => toggleComplete(index)}>{task.text}</p>
+            <p className="status">{task.isComplete ? 'COMPLETE' : 'INCOMPLETE'}</p>
+            <button className="delete-btn" onClick={() => deleteTask(index)}>
+              <i className="fas fa-trash"></i>
+            </button>
+            <button className="up-btn" onClick={() => moveUp(index)}>
+              <i className="fas fa-caret-up"></i>
+            </button>
+            <button className="down-btn" onClick={() => moveDown(index)}>
+              <i className="fas fa-caret-down"></i>
+            </button>
           </li>
-        )}
+        ))}
       </ul>
     </div>
-  )
-}
+  );
+};
 
 export default MyTasks;
