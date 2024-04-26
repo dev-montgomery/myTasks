@@ -18,6 +18,15 @@ const MyTasks = () => {
     };
   };
 
+  function editTask(index) {
+    
+  };
+
+  function toggleComplete(index) {
+    const complete = tasks.map((task, position) => position === index ? task = `COMPLETED ${task}` : task);
+    setTasks(complete);
+  };
+
   function deleteTask(index) {
     const updated = tasks.filter((_, position) => position !== index);
     setTasks(updated);
@@ -57,7 +66,7 @@ const MyTasks = () => {
       <ul>
         {tasks.map((task, index) => 
           <li key={index}>
-            <span className="text">{task}</span>
+            <span className="text" onClick={() => toggleComplete(index)}>{task}</span>
             <button className="delete-btn" onClick={() => deleteTask(index)}><i class="fa-solid fa-trash"></i></button>
             <button className="up-btn" onClick={() => moveUp(index)}><i class="fa-solid fa-caret-up"></i></button>
             <button className="down-btn" onClick={() => moveDown(index)}><i class="fa-solid fa-caret-down"></i></button>
